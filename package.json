@@ -1,0 +1,23 @@
+{
+  "name": "expressloginer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "bookshelf": "^0.9.5",
+    "dotenv": "^2.0.0",
+    "express": "^4.14.0",
+    "express-session": "^1.13.0",
+    "knex": "^0.11.5",
+    "pg": "^5.1.0",
+    "pug": "^2.0.0-beta3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
