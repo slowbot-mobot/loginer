@@ -1,4 +1,4 @@
-
+/*jshint node:true, laxbreak:true */
 /**
  * Module dependencies.
  */
@@ -38,8 +38,25 @@ app.use(function(req, res, next){
   next();
 });
 
-// Authenticate using our plain-object database of doom!
+
 var User = require('./app/models/user');
+
+function register(email, name, password, fn){
+  User.where({'email' : email}).fetch().then(function(user){
+    
+    if (user) return fn(new Error('User already exists'));
+    
+    hash(password, function(err, salt, hash){
+
+      new User({
+        email: email,  
+        name: name,
+        encrypted_password:hash,
+        salt:salt
+      }).save().then(fn);
+    });
+  });
+}
 
 function authenticate(email, pass, fn) {
   if (!module.parent) console.log('authenticating %s:%s', email, pass);
@@ -80,14 +97,42 @@ app.get('/logout', function(req, res){
   });
 });
 
-app.get('/login', function(req, res){
-  res.render('login');
-});
+
+//ROUTES
+
 
 app.get('/', function(req, res){
   res.render('index');
 });
 
+app.get('/nothing', function(req, res){
+  res.render('nothing');
+});
+
+app.get('/signUp', function(req, res){
+  res.render('signUp');
+});
+app.post('/signUp', function(req,res){
+  //Check for validity
+  register(rec.body.email, rec.body.name, rec.body.password, function(err, user){
+    if (user) {
+      req.session.regenerate(function(){
+        req.session.user = user;
+        req.session.success = 'Registered as ' + user.name
+          + ' click to <a href="/logout">logout</a>. '
+          + ' You may now access <a href="/restricted">/restricted</a>.';
+        res.redirect('/restricted');
+      });
+    } else {
+      req.session.error = 'Registration failed:' + err.message;
+      res.redirect('/signUp');
+   }
+  });
+});
+
+app.get('/login', function(req, res){
+  res.render('login');
+});
 app.post('/login', function(req, res){
   authenticate(req.body.email, req.body.password, function(err, user){
     if (user) {
