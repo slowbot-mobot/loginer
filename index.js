@@ -109,12 +109,12 @@ app.get('/nothing', function(req, res){
   res.render('nothing');
 });
 
-app.get('/signUp', function(req, res){
-  res.render('signUp');
+app.get('/signup', function(req, res){
+  res.render('signup');
 });
-app.post('/signUp', function(req,res){
+app.post('/signup', function(req,res){
   //Check for validity
-  register(rec.body.email, rec.body.name, rec.body.password, function(err, user){
+  register(req.body.email, req.body.name, req.body.password, function(err, user){
     if (user) {
       req.session.regenerate(function(){
         req.session.user = user;
@@ -125,7 +125,7 @@ app.post('/signUp', function(req,res){
       });
     } else {
       req.session.error = 'Registration failed:' + err.message;
-      res.redirect('/signUp');
+      res.redirect('/signup');
    }
   });
 });
