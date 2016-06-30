@@ -113,9 +113,11 @@ app.get('/signup', function(req, res){
   res.render('signup');
 });
 app.post('/signup', function(req,res){
-  //Check for validity
+    console.log('Made it here');
   register(req.body.email, req.body.name, req.body.password, function(err, user){
+    console.log('Made it two');
     if (user) {
+    console.log('Made it three');
       req.session.regenerate(function(){
         req.session.user = user;
         req.session.success = 'Registered as ' + user.name
